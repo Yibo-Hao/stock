@@ -1,0 +1,106 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" package="com.stock.zhijin_compass">
+
+
+    <!-- 存储权限 -->
+    <!-- 基础权限（所有版本） -->
+    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
+
+    <!-- Android 10及以下需要WRITE权限 -->
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" /> -->
+    <!-- 仅对API ≤ 29生效 -->
+
+    <!-- Android 11+的MANAGE权限（谨慎使用） -->
+    <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" android:minSdkVersion="30" /> -->
+    <!-- 仅对API ≥ 30生效 -->
+    <!-- 推送相关权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+    <!-- 切换网络通道 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- 网络访问 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 检查wifi网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 检查网络状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- 本地信息缓存 -->
+    <!-- 开关Wi-Fi状态，解决中国内地机型移动网络权限问题需要 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:node="remove" />
+    <application android:label="智金罗盘" android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" android:networkSecurityConfig="@xml/network_security_config">
+        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:enableOnBackInvokedCallback="true" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- 华为推送 -->
+        <meta-data android:name="com.huawei.hms.client.appid" android:value="appid=115317281" />
+
+        <!-- VIVO 推送 -->
+        <meta-data android:name="com.vivo.push.api_key" android:value="da0321892e9263c22b37ab45b07b3220" />
+        <meta-data android:name="com.vivo.push.app_id" android:value="105972286" />
+
+        <!-- 荣耀推送 -->
+        <!-- <meta-data android:name="com.hihonor.push.app_id" android:value="YOUR_HIHONOR_APP_ID" /> -->
+
+        <!-- OPPO 推送 --> 
+        <meta-data android:name="com.oppo.push.key" android:value="02f201de873f4b6383253ac13d49e523" />
+        <meta-data android:name="com.oppo.push.secret" android:value="bd0b3f1240fd4725b8638e8fd4fd2b2b" />
+
+        <!-- 小米推送 -->
+        <meta-data android:name="com.xiaomi.push.id" android:value="id=2882303761520456382" />
+        <meta-data android:name="com.xiaomi.push.key" android:value="id=5152045679382" />
+
+        <!-- 魅族推送 -->
+        <meta-data android:name="com.meizu.push.id" android:value="YOUR_MEIZU_APP_ID" />
+        <meta-data android:name="com.meizu.push.key" android:value="YOUR_MEIZU_APP_KEY" />
+
+        <!-- FCM 推送 -->
+        <!-- <meta-data android:name="com.gcm.push.sendid" android:value="id=YOUR_FCM_SENDER_ID" />
+    <meta-data android:name="com.gcm.push.applicationid" android:value="YOUR_FCM_APP_ID" />
+    <meta-data android:name="com.gcm.push.projectid" android:value="YOUR_FCM_PROJECT_ID" />
+    <meta-data android:name="com.gcm.push.api.key" android:value="YOUR_FCM_API_KEY" /> -->
+
+        <!-- 阿里云推送消息接收器（用户可自主扩展） -->
+        <receiver android:name="com.aliyun.ams.push.AliyunPushMessageReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.sdk.android.push.RECEIVE" />
+            </intent-filter>
+        </receiver>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data android:name="flutterEmbedding" android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
