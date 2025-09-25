@@ -186,23 +186,30 @@ Future<void> showPushPermissDialog(
 
 Future<void> gotoPushSetting() async {
   jumpToNotificationSettingsMIUI();
+  isMIUI();
 }
 
 //检测是不是MIUI
 Future<bool> isMIUI() async {
+  print("检测跳转===isMIUI进入");
   try {
     final buildProp = await File('/system/build.prop').readAsString();
+    print("检测跳转===isMIUI${buildProp.contains('ro.miui.ui.version.name')}");
     return buildProp.contains('ro.miui.ui.version.name');
   } catch (e) {
+    print("检测跳转===isMIUI失败$e");
     return false;
   }
 }
 
 Future<void> jumpToNotificationSettingsMIUI() async {
+  print("检测跳转===跳转进入");
   try {
     // 尝试标准方式
     AliyunPush().jumpToAndroidNotificationSettings();
+    print("检测跳转===跳转成功");
   } catch (e) {
+    print("检测跳转===跳转失败进入");
     // MIUI特殊处理
     try {
       // 方案1: 直接跳转通知设置
@@ -210,8 +217,10 @@ Future<void> jumpToNotificationSettingsMIUI() async {
           'package:com.stock.zhijin_compass#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;end';
       if (await canLaunchUrl(Uri.parse(scheme))) {
         await launchUrl(Uri.parse(scheme));
+        print("检测跳转===跳转失败方案1成功");
         return;
       }
+      print("检测跳转===跳转失败方案1失败");
 
       // 方案2: 使用Intent方式
       final intent = AndroidIntent(
@@ -219,7 +228,9 @@ Future<void> jumpToNotificationSettingsMIUI() async {
         data: 'package:com.stock.zhijin_compass',
       );
       await intent.launch();
+      print("检测跳转===跳转失败方案2成功");
     } catch (e) {
+      print("检测跳转===跳转失败方案2失败");
       // 方案3: 跳转到应用信息页
       try {
         final intent = AndroidIntent(
@@ -227,9 +238,11 @@ Future<void> jumpToNotificationSettingsMIUI() async {
           data: 'package:com.stock.zhijin_compass',
         );
         await intent.launch();
+        print("检测跳转===跳转失败方案3成功");
       } catch (e) {
         // 最终方案: 使用系统默认方式
-        AliyunPush().jumpToAndroidNotificationSettings();
+        print("检测跳转===跳转失败方案3失败");
+        openAppSettings();
       }
     }
   }
