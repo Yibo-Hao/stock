@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 在AndroidManifest.xml中添加 -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -58,7 +60,7 @@
         <!-- 荣耀推送 -->
         <!-- <meta-data android:name="com.hihonor.push.app_id" android:value="YOUR_HIHONOR_APP_ID" /> -->
 
-        <!-- OPPO 推送 --> 
+        <!-- OPPO 推送 -->
         <meta-data android:name="com.oppo.push.key" android:value="02f201de873f4b6383253ac13d49e523" />
         <meta-data android:name="com.oppo.push.secret" android:value="bd0b3f1240fd4725b8638e8fd4fd2b2b" />
 

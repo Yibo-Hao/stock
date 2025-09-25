@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:aliyun_push/aliyun_push.dart';
+import 'package:flutter/services.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
@@ -166,7 +171,7 @@ Future<void> showPushPermissDialog(
         } else if (result.isPermanentlyDenied) {
           // 权限被永久拒绝，引导用户到设置
 
-          AliyunPush().jumpToAndroidNotificationSettings();
+          gotoPushSetting();
           safeGoback(context);
         } else if (result.isDenied) {
           // 用户拒绝后返回首页
@@ -176,5 +181,56 @@ Future<void> showPushPermissDialog(
         }
       },
     );
+  }
+}
+
+Future<void> gotoPushSetting() async {
+  jumpToNotificationSettingsMIUI();
+}
+
+//检测是不是MIUI
+Future<bool> isMIUI() async {
+  try {
+    final buildProp = await File('/system/build.prop').readAsString();
+    return buildProp.contains('ro.miui.ui.version.name');
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<void> jumpToNotificationSettingsMIUI() async {
+  try {
+    // 尝试标准方式
+    AliyunPush().jumpToAndroidNotificationSettings();
+  } catch (e) {
+    // MIUI特殊处理
+    try {
+      // 方案1: 直接跳转通知设置
+      const scheme =
+          'package:com.stock.zhijin_compass#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;end';
+      if (await canLaunchUrl(Uri.parse(scheme))) {
+        await launchUrl(Uri.parse(scheme));
+        return;
+      }
+
+      // 方案2: 使用Intent方式
+      final intent = AndroidIntent(
+        action: 'android.settings.APP_NOTIFICATION_SETTINGS',
+        data: 'package:com.stock.zhijin_compass',
+      );
+      await intent.launch();
+    } catch (e) {
+      // 方案3: 跳转到应用信息页
+      try {
+        final intent = AndroidIntent(
+          action: 'android.settings.APPLICATION_DETAILS_SETTINGS',
+          data: 'package:com.stock.zhijin_compass',
+        );
+        await intent.launch();
+      } catch (e) {
+        // 最终方案: 使用系统默认方式
+        AliyunPush().jumpToAndroidNotificationSettings();
+      }
+    }
   }
 }

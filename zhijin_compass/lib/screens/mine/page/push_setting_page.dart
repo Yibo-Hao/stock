@@ -149,7 +149,7 @@ class _PushSettingPageState extends State<PushSettingPage>
                       value: _isPushAble,
                       onChanged: (value) {
                         if (_isPushAble) {
-                          AliyunPush().jumpToAndroidNotificationSettings();
+                          gotoPushSetting();
                         } else {
                           showPushPermissDialog(
                             context,

@@ -74,6 +74,8 @@ dependencies:
   # jpush_flutter: ^3.3.6  #极光推送
   image_gallery_saver_plus: ^4.0.1
   aliyun_push: 1.0.0
+  url_launcher: ^6.3.2
+  android_intent_plus: ^6.0.0
   
   
 dev_dependencies:
