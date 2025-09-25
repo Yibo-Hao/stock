@@ -43,7 +43,7 @@ class _AboutPageState extends State<AboutPage> {
         height: 100,
         child: Center(
           child: Text(
-            "北京量子珊瑚科技有限公司\nCopyright@2025-2028 All Rights Reserved\n${BaseSpStorage.getInstance().deviceId}",
+            "北京量子珊瑚科技有限公司\nCopyright@2025-2028 All Rights Reserved",
             textAlign: TextAlign.center,
             style: ZzFonts.fontNormal666(12),
           ),

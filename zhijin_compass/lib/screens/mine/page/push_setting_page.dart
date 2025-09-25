@@ -170,16 +170,22 @@ class _PushSettingPageState extends State<PushSettingPage>
                 child: Text("推送消息", style: ZzFonts.fontMedium111(14)),
               ),
               Container(
-                color: _isPushAble
-                    ? ZzColor.whiteColor
-                    : const Color.fromARGB(113, 255, 255, 255),
+                color: ZzColor.whiteColor,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 margin: EdgeInsets.only(top: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("系统消息", style: ZzFonts.fontNormal333(14)),
+                    Text(
+                      "系统消息",
+                      style: _isPushAble
+                          ? ZzFonts.fontNormal333(14)
+                          : ZzFonts.fontNormal999(14),
+                    ),
                     CupertinoSwitch(
+                      thumbColor: _isPushAble
+                          ? ZzColor.whiteColor
+                          : Color(0xfff2f2f2),
                       value:
                           ((_userModel?.pushSystemMessage ?? false) &&
                           _isPushAble),
