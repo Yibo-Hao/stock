@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aliyun_push/aliyun_push.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
+import 'package:zhijin_compass/ztool/ztool_loading.dart';
 
 enum PermissionType { sms, calendar, camera, notification, storage }
 
@@ -158,10 +160,12 @@ Future<void> showPushPermissDialog(
       title: "开启消息推送",
       content: '消息闪电送达 风向精准把握\n动态瞬间洞悉 先机一手掌控 ',
       rightButtonAction: () async {
+        print("检测跳转===弹窗确认进入");
         // 用户确认后申请权限
         final result = await ZzPermissionTool().requestPermission(
           PermissionType.notification,
         );
+        print("检测跳转===弹窗获取权限$result");
 
         if (result.isGranted && mounted) {
           if (onGranted != null) {
@@ -174,6 +178,11 @@ Future<void> showPushPermissDialog(
           gotoPushSetting();
           safeGoback(context);
         } else if (result.isDenied) {
+          //判断是否是华为设备
+
+          if (await isHuaweiDevice() || await isRedmiDevice()) {
+            gotoPushSetting();
+          }
           // 用户拒绝后返回首页
           if (mounted) {
             safeGoback(context);
@@ -186,24 +195,63 @@ Future<void> showPushPermissDialog(
 
 Future<void> gotoPushSetting() async {
   jumpToNotificationSettingsMIUI();
-  isMIUI();
 }
 
-//检测是不是MIUI
-Future<bool> isMIUI() async {
-  print("检测跳转===isMIUI进入");
+/// 判断是否是华为设备
+Future<bool> isHuaweiDevice() async {
   try {
-    final buildProp = await File('/system/build.prop').readAsString();
-    print("检测跳转===isMIUI${buildProp.contains('ro.miui.ui.version.name')}");
-    return buildProp.contains('ro.miui.ui.version.name');
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      // 华为设备通常有以下特征：
+      // 1. 制造商是HUAWEI
+      // 2. 品牌是HUAWEI
+      // 3. 型号以HUAWEI开头
+      print(
+        "检测跳转===判断是不是华为设备${androidInfo.manufacturer.toUpperCase().contains('HUAWEI') == true || androidInfo.brand.toUpperCase().contains('HUAWEI') == true || androidInfo.model.toUpperCase().startsWith('HUAWEI') == true}",
+      );
+      return androidInfo.manufacturer.toUpperCase().contains('HUAWEI') ==
+              true ||
+          androidInfo.brand.toUpperCase().contains('HUAWEI') == true ||
+          androidInfo.model.toUpperCase().startsWith('HUAWEI') == true;
+    }
+    return false;
   } catch (e) {
-    print("检测跳转===isMIUI失败$e");
+    return false;
+  }
+}
+
+/// 判断是否是红米设备
+Future<bool> isRedmiDevice() async {
+  try {
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      // 红米设备通常有以下特征：
+      // 1. 品牌是Redmi或Xiaomi
+      // 2. 型号以"Redmi"或"红米"开头
+      // 3. 或者包含"Redmi"或"红米"字样
+      final brand = androidInfo.brand.toUpperCase();
+      final model = androidInfo.model.toUpperCase();
+      print(
+        "检测跳转===判断是不是红米设备${brand.contains('REDMI') || brand.contains('XIAOMI') || model.contains('REDMI') || model.contains('红米') || model.startsWith('REDMI') || model.startsWith('红米')}",
+      );
+      return brand.contains('REDMI') ||
+          brand.contains('XIAOMI') ||
+          model.contains('REDMI') ||
+          model.contains('红米') ||
+          model.startsWith('REDMI') ||
+          model.startsWith('红米');
+    }
+    return false;
+  } catch (e) {
     return false;
   }
 }
 
 Future<void> jumpToNotificationSettingsMIUI() async {
   print("检测跳转===跳转进入");
+
   try {
     // 尝试标准方式
     AliyunPush().jumpToAndroidNotificationSettings();

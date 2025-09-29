@@ -13,8 +13,8 @@ import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 
 class BaseUrl {
-  static var url = "http://qa-test.qcoral.tech";
-  static var webUrl = "http://web-test.qcoral.tech";
+  static var url = "https://ai.qcoral.tech";
+  static var webUrl = "https://web-prod.qcoral.tech";
 }
 
 class HttpUtil {

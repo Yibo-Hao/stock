@@ -1,3 +1,4 @@
+import 'package:aliyun_push/aliyun_push.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -40,20 +41,15 @@ class _MessageListPageState extends State<MessageListPage>
   }
 
   _getPushStatus() async {
-    final status = await ZzPermissionTool().checkPermission(
-      PermissionType.notification,
-    );
-
-    if (status.isGranted) {
+    AliyunPush().isAndroidNotificationEnabled().then((value) {
       setState(() {
-        _isPushAble = true;
+        if (mounted) {
+          setState(() {
+            _isPushAble = value;
+          });
+        }
       });
-      // 已有权限则直接返回
-    } else {
-      setState(() {
-        _isPushAble = false;
-      });
-    }
+    });
   }
 
   @override
