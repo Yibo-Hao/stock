@@ -68,7 +68,7 @@ class _AboutPageState extends State<AboutPage> {
             Text("$appName   $version", style: ZzFonts.fontNormal666(12)),
             SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: ZzDecoration.onlyradius(8, ZzColor.whiteColor),
               child: Column(

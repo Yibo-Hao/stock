@@ -34,6 +34,7 @@ class _StockSearchPageState extends State<StockSearchPage>
   List<HotSearchModel> _hotSearchList = [];
   List<NewStockModel> _collectStockList = [];
   bool _isLogin = true;
+  bool _isDoneBuild = false;
   @override
   void onLifecycleEvent(LifecycleEvent event) {
     debugPrint("生命周期事件: $event");
@@ -60,6 +61,7 @@ class _StockSearchPageState extends State<StockSearchPage>
 
     _getHotSearchListUrl();
     _getCollectStockListUrl();
+    _getIsDoneBuildUrl();
   }
 
   _getHotSearchListUrl() {
@@ -167,6 +169,21 @@ class _StockSearchPageState extends State<StockSearchPage>
     );
   }
 
+  _getIsDoneBuildUrl() {
+    HttpUtil.getInstance().get(
+      "/user/isLastVersion",
+      successCallback: (data) {
+        ZzLoading.dismiss();
+        setState(() {
+          _isDoneBuild = data ?? false;
+        });
+      },
+      errorCallback: (errorCode, errorMsg) {
+        ZzLoading.showMessage(errorMsg);
+      },
+    );
+  }
+
   // 处理收藏股票数据
   _handleCollectStockData(List<dynamic> stocks) {
     setState(() {
@@ -220,7 +237,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xffF5F7FA),
+                      color: Color(0xffF2F2F2),
                       borderRadius: BorderRadius.all(Radius.circular(100)),
                     ),
                     child: Container(
@@ -241,7 +258,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                               textInputAction: TextInputAction.search,
                               style: TextStyle(
                                 color: ZzColor.color_333333,
-                                fontSize: 16,
+                                fontSize: 15,
                                 textBaseline: TextBaseline.alphabetic,
                               ),
                               inputFormatters: <TextInputFormatter>[
@@ -256,7 +273,7 @@ class _StockSearchPageState extends State<StockSearchPage>
 
                                 //alignLabelWithHint: true,
                                 hintStyle: TextStyle(
-                                  color: Color(0xffC9CFDC),
+                                  color: Color(0xffA8A8A8),
                                   fontSize: 13,
                                   textBaseline: TextBaseline.alphabetic,
                                   height: 1.35,
@@ -330,7 +347,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                 borderRadius: BorderRadius.all(Radius.circular(12)),
               ),
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(8),
               child: Column(
                 children: [
                   Row(
@@ -340,7 +357,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                       Text("热门搜索", style: ZzFonts.fontMedium333(16)),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 8),
                   //写一个热门搜索的标签
                   SizedBox(
                     width: double.infinity,
@@ -354,12 +371,14 @@ class _StockSearchPageState extends State<StockSearchPage>
                       children: _hotSearchList.map((item) {
                         return InkWell(
                           onTap: () {
-                            constPushToPage(
-                              context,
-                              StockDetailPage(
-                                model: NewStockModel.fromJson(item.toJson()),
-                              ),
-                            );
+                            if (_isDoneBuild) {
+                              constPushToPage(
+                                context,
+                                StockDetailPage(
+                                  model: NewStockModel.fromJson(item.toJson()),
+                                ),
+                              );
+                            }
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -393,10 +412,12 @@ class _StockSearchPageState extends State<StockSearchPage>
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    constPushToPage(
-                      context,
-                      StockDetailPage(model: _searchResult[index]),
-                    );
+                    if (_isDoneBuild) {
+                      constPushToPage(
+                        context,
+                        StockDetailPage(model: _searchResult[index]),
+                      );
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -434,8 +455,8 @@ class _StockSearchPageState extends State<StockSearchPage>
                                 padding: EdgeInsets.only(
                                   left: 30,
                                   right: 10,
-                                  top: 15,
-                                  bottom: 15,
+                                  top: 10,
+                                  bottom: 10,
                                 ),
                                 child: Image.asset(
                                   _collectStockList.any(

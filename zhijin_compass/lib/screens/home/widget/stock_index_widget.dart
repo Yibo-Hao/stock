@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 
 class StockIndexWidget extends StatefulWidget {
@@ -18,6 +19,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
   late Map<String, dynamic> shData;
   late Map<String, dynamic> szData;
   late Map<String, dynamic> cybData;
+  bool _isDoneBuild = false;
 
   @override
   void initState() {
@@ -26,6 +28,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
     szData = {"name": "深证成指", "price": "0.00", "diff": "0.00", "chg": "0.00"};
     cybData = {"name": "创业板指", "price": "0.00", "diff": "0.00", "chg": "0.00"};
     _initSocket();
+    _getIsDoneBuildUrl();
   }
 
   void _initSocket() async {
@@ -52,6 +55,21 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
       print('ws==>尝试错误: $e');
       Future.delayed(Duration(seconds: 5), _initSocket);
     }
+  }
+
+  _getIsDoneBuildUrl() {
+    HttpUtil.getInstance().get(
+      "/user/isLastVersion",
+      successCallback: (data) {
+        ZzLoading.dismiss();
+        setState(() {
+          _isDoneBuild = data ?? false;
+        });
+      },
+      errorCallback: (errorCode, errorMsg) {
+        ZzLoading.showMessage(errorMsg);
+      },
+    );
   }
 
   void _handleMessage(String message) {
@@ -107,7 +125,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: 10),
       margin: const EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -127,7 +145,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
               ],
             ),
           ),
-          if (widget.onNewsTap != null)
+          if (widget.onNewsTap != null && _isDoneBuild)
             InkWell(
               onTap: widget.onNewsTap,
               child: Padding(
@@ -168,7 +186,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
               FontWeight.w500,
             ),
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -183,9 +183,9 @@ class _NewsPageState extends State<NewsPage> {
                                         ),
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 15,
-                                          vertical: 10,
+                                          vertical: 8,
                                         ),
-                                        margin: EdgeInsets.only(bottom: 10),
+                                        margin: EdgeInsets.only(bottom: 8),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,

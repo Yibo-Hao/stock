@@ -6,15 +6,22 @@ import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:lifecycle/lifecycle.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/screens/home/page/stock_detail_page.dart';
 import 'package:zhijin_compass/screens/roots/base_webview_page.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
 import 'package:zhijin_compass/screens/search/model/new_stock_model.dart';
+import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 
 class CollectStockWidget extends StatefulWidget {
-  const CollectStockWidget({super.key, required this.collectStockList});
+  const CollectStockWidget({
+    super.key,
+    required this.collectStockList,
+    this.onLongPress,
+  });
   final List<NewStockModel> collectStockList;
+  final Function(NewStockModel)? onLongPress;
 
   @override
   State<CollectStockWidget> createState() => _CollectStockWidgetState();
@@ -38,6 +45,14 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
 
   final String wssBaseUrl = "wss://hq.sinajs.cn/wskt?list=";
   String wssFullUrl = "";
+  bool _isDoneBuild = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getIsDoneBuildUrl();
+  }
+
   initData() {
     final symbols = widget.collectStockList.map((e) => e.symbol).toList();
     if (symbols.isEmpty) {
@@ -66,6 +81,21 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
       //启动socket
       initSocket();
     }
+  }
+
+  _getIsDoneBuildUrl() {
+    HttpUtil.getInstance().get(
+      "/user/isLastVersion",
+      successCallback: (data) {
+        ZzLoading.dismiss();
+        setState(() {
+          _isDoneBuild = data ?? false;
+        });
+      },
+      errorCallback: (errorCode, errorMsg) {
+        ZzLoading.showMessage(errorMsg);
+      },
+    );
   }
 
   //初始化socket
@@ -215,7 +245,7 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
                   topRight: Radius.circular(10),
                 ),
               ),
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 children: [
                   Expanded(
@@ -305,8 +335,8 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
           },
           sliver: SliverToBoxAdapter(
             child: Container(
+              //长按弹出菜单,弹出位置跟随长按位置
               color: ZzColor.whiteColor,
-
               child: Column(
                 children: _sortedStockList.map((stock) {
                   final data =
@@ -326,7 +356,14 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
                   stock.chg ??= data["chg"];
                   return InkWell(
                     onTap: () {
-                      constPushToPage(context, StockDetailPage(model: stock));
+                      if (_isDoneBuild) {
+                        constPushToPage(context, StockDetailPage(model: stock));
+                      }
+                    },
+                    onLongPress: () {
+                      if (widget.onLongPress != null) {
+                        widget.onLongPress!(stock);
+                      }
                     },
                     child: Column(
                       children: [

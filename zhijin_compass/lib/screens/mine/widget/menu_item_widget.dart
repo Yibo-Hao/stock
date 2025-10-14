@@ -50,7 +50,7 @@ class MenuItemWidget extends StatelessWidget {
         ),
         Visibility(
           visible: !isEnd,
-          child: Divider(height: 30, color: ZzColor.lineColor),
+          child: Divider(height: 20, color: ZzColor.lineColor),
         ),
       ],
     );

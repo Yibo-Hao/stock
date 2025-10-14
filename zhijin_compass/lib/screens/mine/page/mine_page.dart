@@ -212,7 +212,7 @@ class _MinePageState extends State<MinePage>
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 15,
-                            vertical: 10,
+                            vertical: 8,
                           ),
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           decoration: ZzDecoration.onlyradius(
@@ -293,14 +293,15 @@ class _MinePageState extends State<MinePage>
                               _loginOut();
                             },
                             child: Container(
-                              margin: EdgeInsets.only(top: 30, bottom: 30),
-                              width: 150,
+                              margin: EdgeInsets.only(
+                                top: 8,
+                                left: 20,
+                                right: 20,
+                              ),
                               height: 45,
-                              decoration: ZzDecoration.withborder(
-                                ZzColor.clearColor,
-                                1,
-                                ZzColor.blackColor,
-                                radius: 100,
+                              decoration: ZzDecoration.onlyradius(
+                                100,
+                                ZzColor.whiteColor,
                               ),
                               child: Center(
                                 child: Text(

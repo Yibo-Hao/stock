@@ -13,8 +13,10 @@ import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 
 class BaseUrl {
-  static var url = "https://ai.qcoral.tech";
-  static var webUrl = "https://web-prod.qcoral.tech";
+  static var url = kDebugMode
+      ? 'http://qa-test.qcoral.tech'
+      : "https://ai.qcoral.tech";
+  static var webUrl = "http://web-prod.qcoral.tech";
 }
 
 class HttpUtil {
@@ -76,6 +78,8 @@ class HttpUtil {
           String token = BaseSpStorage.getInstance().userToken;
           options.headers["X-userToken"] = token;
           options.headers["X-deviceId"] = BaseSpStorage.getInstance().deviceId;
+          options.headers["X-systemType"] = "android";
+          options.headers["X-appVersion"] = "1.0.0";
           options.baseUrl = BaseUrl.url;
           return handler.next(options);
         },

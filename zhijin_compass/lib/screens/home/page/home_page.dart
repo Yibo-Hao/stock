@@ -267,10 +267,10 @@ class _HomePageState extends State<HomePage>
                                 margin: const EdgeInsets.only(
                                   left: 10,
                                   right: 10,
-                                  top: 15,
-                                  bottom: 15,
+                                  top: 8,
+                                  bottom: 8,
                                 ),
-                                padding: EdgeInsets.only(bottom: 10),
+                                padding: EdgeInsets.only(bottom: 8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(12),
@@ -279,6 +279,27 @@ class _HomePageState extends State<HomePage>
                                 ),
                                 child: CollectStockWidget(
                                   collectStockList: _collectStockList,
+                                  onLongPress: (stock) {
+                                    ZzCustomDialog.show(
+                                      context: context,
+                                      image: Positioned(
+                                        top: -75,
+                                        left: 0,
+                                        right: 0,
+                                        child: Image.asset(
+                                          'assets/images/dialog_warnning.png',
+                                          height: 150,
+                                        ),
+                                      ),
+                                      content: "确定删除当前股票吗?",
+                                      leftButtonText: "取消",
+                                      rightButtonText: "删除",
+                                      rightButtonAction: () {
+                                        _removeCollectStockUrl(stock);
+                                        safeGoback(context);
+                                      },
+                                    );
+                                  },
                                 ),
                               )
                             : Container(
@@ -329,7 +350,7 @@ class _HomePageState extends State<HomePage>
                             margin: const EdgeInsets.only(
                               left: 15,
                               right: 15,
-                              bottom: 10,
+                              bottom: 8,
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(
@@ -362,7 +383,7 @@ class _HomePageState extends State<HomePage>
                           margin: const EdgeInsets.only(
                             left: 8,
                             right: 8,
-                            bottom: 12,
+                            bottom: 8,
                           ),
                           decoration: BoxDecoration(
                             //渐变色
@@ -425,6 +446,38 @@ class _HomePageState extends State<HomePage>
           ],
         ),
       ),
+    );
+  }
+
+  _removeCollectStockUrl(NewStockModel params) {
+    if ($empty(BaseSpStorage.getInstance().userToken)) {
+      var list = [...BaseSpStorage.getInstance().localStockModels];
+      list.removeWhere((element) => element.symbol == params.symbol);
+
+      BaseSpStorage.getInstance().setLocalStockModels(list);
+      ZzLoading.showMessage("移除成功");
+      _getCollectStockListUrl();
+      return;
+    }
+    ZzLoading.show();
+    String symbol;
+    if (params.securityType == 'E') {
+      symbol = "${params.symbol}@cn@e";
+    } else if (params.securityType == 'Z') {
+      symbol = "${params.symbol}@cn@z";
+    } else {
+      symbol = "${params.symbol}@cn@s";
+    }
+    HttpUtil.getInstance().post(
+      "/portfolio/removeStocks",
+      data: {"symbol": symbol},
+      successCallback: (data) {
+        ZzLoading.showMessage("移除成功!");
+        _getCollectStockListUrl();
+      },
+      errorCallback: (errorCode, errorMsg) {
+        ZzLoading.showMessage("添加收藏股票失败: $errorMsg");
+      },
     );
   }
 }
