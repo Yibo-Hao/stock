@@ -506,7 +506,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-      leftButtonText: "取消",
+      leftButtonText: "不同意",
       rightButtonText: "同意",
       rightButtonAction: () {
         setState(() {

@@ -10,6 +10,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/screens/message/model/message_model.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
+import 'package:zhijin_compass/storages/sp_utils.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/tools/ZzPermissionTool.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
@@ -99,6 +100,9 @@ class _MessageListPageState extends State<MessageListPage>
   }
 
   _getMessageGroup() {
+    if ($empty(BaseSpStorage.getInstance().userToken)) {
+      return;
+    }
     ZzLoading.show();
     HttpUtil.getInstance().get(
       "/message/getMessage",
@@ -162,149 +166,155 @@ class _MessageListPageState extends State<MessageListPage>
           );
         },
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 8),
-          Visibility(
-            visible: !_isPushAble,
-            child: Container(
-              decoration: BoxDecoration(
-                //渐变色
-                gradient: LinearGradient(
-                  colors: [Color(0xffFFF3DD), Color(0xffFFFCF7)],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 8),
+            Visibility(
+              visible: !_isPushAble,
+              child: Container(
+                decoration: BoxDecoration(
+                  //渐变色
+                  gradient: LinearGradient(
+                    colors: [Color(0xffFFF3DD), Color(0xffFFFCF7)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+
+                  //边框
                 ),
-
-                //边框
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/lingdang_small.png',
-                        height: 20,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "开启推送通知，不错过任何重要消息",
-                        style: ZzFonts.fontNormal333(14),
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () => showPushPermissDialog(
-                      context,
-                      mounted,
-                      onGranted: () {
-                        ZzLoading.showMessage('text');
-                        _getPushStatus();
-                      },
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/images/lingdang_small.png',
+                          height: 20,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "开启推送通知，不错过任何重要消息",
+                          style: ZzFonts.fontNormal333(14),
+                        ),
+                      ],
                     ),
-                    child: Container(
-                      decoration: ZzDecoration.onlyradius(
-                        100,
-                        ZzColor.mainAppColor,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 3,
-                      ),
-                      child: Center(
-                        child: Text('去开启', style: ZzFonts.fontNormalWhite(12)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: ZzRefresh(
-              refreshController: _refreshController,
-              onRefresh: () => _onRefresh(),
-              onLoading: () => _onLoad(),
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  ..._dataArr.map(
-                    (item) => SliverToBoxAdapter(
-                      child: InkWell(
-                        onTap: () {
-                          _readMessage(item);
+                    InkWell(
+                      onTap: () => showPushPermissDialog(
+                        context,
+                        mounted,
+                        onGranted: () {
+                          ZzLoading.showMessage('text');
+                          _getPushStatus();
                         },
-                        child: Container(
-                          color: ZzColor.whiteColor,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          margin: EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/msg_iocn.png',
-                                    height: 40,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: ZzScreen().screenWidth - 95,
-                                        child: Text(
-                                          item.content ?? '',
-                                          style: ZzFonts.fontMedium111(14),
-                                        ),
-                                      ),
-                                      Text(
-                                        _formatTime(item.createTime),
-                                        style: ZzFonts.fontNormal333(12),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  // Text(
-                                  //   "09:22",
-                                  //   style: ZzFonts.fontNormal666(12),
-                                  // ),
-                                  (item.isRead == false)
-                                      ? Container(
-                                          height: 10,
-                                          width: 10,
-
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.red,
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            ],
+                      ),
+                      child: Container(
+                        decoration: ZzDecoration.onlyradius(
+                          100,
+                          ZzColor.mainAppColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 3,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '去开启',
+                            style: ZzFonts.fontNormalWhite(12),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: ZzRefresh(
+                refreshController: _refreshController,
+                onRefresh: () => _onRefresh(),
+                onLoading: () => _onLoad(),
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    ..._dataArr.map(
+                      (item) => SliverToBoxAdapter(
+                        child: InkWell(
+                          onTap: () {
+                            _readMessage(item);
+                          },
+                          child: Container(
+                            color: ZzColor.whiteColor,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            margin: EdgeInsets.only(top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/msg_iocn.png',
+                                      height: 40,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: ZzScreen().screenWidth - 95,
+                                          child: Text(
+                                            item.content ?? '',
+                                            style: ZzFonts.fontMedium111(14),
+                                          ),
+                                        ),
+                                        Text(
+                                          _formatTime(item.createTime),
+                                          style: ZzFonts.fontNormal333(12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    // Text(
+                                    //   "09:22",
+                                    //   style: ZzFonts.fontNormal666(12),
+                                    // ),
+                                    (item.isRead == false)
+                                        ? Container(
+                                            height: 10,
+                                            width: 10,
+
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

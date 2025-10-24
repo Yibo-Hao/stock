@@ -104,3 +104,22 @@
 -dontwarn com.vivo.**
 # OPPO通道
 -keep public class * extends android.app.Service
+# 友盟统计
+-keep class com.umeng.** {*;}
+
+-keep class org.repackage.** {*;}
+
+-keep class com.uyumao.** { *; }
+
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep public class [com.stock.zhijin_compass].R$*{
+public static final int *;
+}

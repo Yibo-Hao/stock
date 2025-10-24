@@ -19,9 +19,11 @@ class CollectStockWidget extends StatefulWidget {
     super.key,
     required this.collectStockList,
     this.onLongPress,
+    this.isDoneBuild = false,
   });
   final List<NewStockModel> collectStockList;
   final Function(NewStockModel)? onLongPress;
+  final bool isDoneBuild;
 
   @override
   State<CollectStockWidget> createState() => _CollectStockWidgetState();
@@ -45,13 +47,6 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
 
   final String wssBaseUrl = "wss://hq.sinajs.cn/wskt?list=";
   String wssFullUrl = "";
-  bool _isDoneBuild = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _getIsDoneBuildUrl();
-  }
 
   initData() {
     final symbols = widget.collectStockList.map((e) => e.symbol).toList();
@@ -81,21 +76,6 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
       //启动socket
       initSocket();
     }
-  }
-
-  _getIsDoneBuildUrl() {
-    HttpUtil.getInstance().get(
-      "/user/isLastVersion",
-      successCallback: (data) {
-        ZzLoading.dismiss();
-        setState(() {
-          _isDoneBuild = data ?? false;
-        });
-      },
-      errorCallback: (errorCode, errorMsg) {
-        ZzLoading.showMessage(errorMsg);
-      },
-    );
   }
 
   //初始化socket
@@ -356,7 +336,7 @@ class _CollectStockWidgetState extends State<CollectStockWidget>
                   stock.chg ??= data["chg"];
                   return InkWell(
                     onTap: () {
-                      if (_isDoneBuild) {
+                      if (widget.isDoneBuild) {
                         constPushToPage(context, StockDetailPage(model: stock));
                       }
                     },

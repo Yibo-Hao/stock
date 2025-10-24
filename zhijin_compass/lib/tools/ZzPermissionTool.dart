@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
+import 'package:zhijin_compass/screens/roots/update_dialog.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/ztool/ztool_loading.dart';
 
@@ -135,6 +136,7 @@ Future<void> showPushPermissDialog(
 
   if (status.isGranted) {
     // 已有权限则直接返回
+    UpdateDialog.checkAndShowUpdateDialog(context);
     return;
   }
 
@@ -144,10 +146,12 @@ Future<void> showPushPermissDialog(
       context: context,
       barrierDismissible: false,
       closeButtonAction: () {
+        UpdateDialog.checkAndShowUpdateDialog(context);
         safeGoback(context);
         //返回首页
       },
       leftButtonAction: () {
+        UpdateDialog.checkAndShowUpdateDialog(context);
         safeGoback(context);
         //返回首页
       },
@@ -171,11 +175,13 @@ Future<void> showPushPermissDialog(
           if (onGranted != null) {
             onGranted();
           }
+          UpdateDialog.checkAndShowUpdateDialog(context);
           safeGoback(context);
         } else if (result.isPermanentlyDenied) {
           // 权限被永久拒绝，引导用户到设置
 
           gotoPushSetting();
+          UpdateDialog.checkAndShowUpdateDialog(context);
           safeGoback(context);
         } else if (result.isDenied) {
           //判断是否是华为设备
@@ -185,6 +191,7 @@ Future<void> showPushPermissDialog(
           }
           // 用户拒绝后返回首页
           if (mounted) {
+            UpdateDialog.checkAndShowUpdateDialog(context);
             safeGoback(context);
           }
         }

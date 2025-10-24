@@ -15,6 +15,7 @@ import 'package:zhijin_compass/screens/roots/router_manager.dart';
 import 'package:zhijin_compass/storages/sp_utils.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 import 'package:uuid/uuid.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 
 // import 'package:yuyou_trucks/screens/navigate/pages/navigate.dart';
 // import 'package:yuyou_trucks/screens/task/pages/task.dart';
@@ -48,6 +49,13 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
     // print("HHHHHH--进入初始化index页面,初始化推送方法");
     // initJPushMethod();
+
+    UmengCommonSdk.initCommon(
+      '68f5d3808560e34872cef253',
+      '68f5d3808560e34872cef253',
+      'Umeng',
+    );
+    UmengCommonSdk.setPageCollectionModeAuto();
     initAliyunPush();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // 在当前帧绘制完成后执行的操作
@@ -263,14 +271,16 @@ class _IndexPageState extends State<IndexPage> {
         child: BottomNavigationBar(
           items: bottomNavItems,
           currentIndex: currentIndex,
-          selectedFontSize: 10,
-          unselectedFontSize: 10,
-          iconSize: 18,
+          selectedFontSize: 0,
+          unselectedFontSize: 0,
+          iconSize: 1,
           elevation: 10.0,
           backgroundColor: Colors.white,
           unselectedItemColor: const Color.fromRGBO(177, 177, 180, 1),
           selectedItemColor: ZzColor.mainAppColor,
           type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           onTap: (index) {
             // EventBus().sendBroadcast(
             //     EventBusKey.tabbarDidChange, bottomNavItems[index].label);
@@ -285,7 +295,7 @@ class _IndexPageState extends State<IndexPage> {
         onWillPop: () async {
           if (_lastClickTime == null ||
               DateTime.now().difference(_lastClickTime!) >
-                  const Duration(seconds: 1)) {
+                  const Duration(seconds: 2)) {
             //两次点击间隔超过1秒则重新计时
             _lastClickTime = DateTime.now();
             //待完成

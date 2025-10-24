@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:lifecycle/lifecycle.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/screens/home/widget/collect_stock_widget.dart';
 import 'package:zhijin_compass/screens/roots/root_event_bus.dart';
@@ -15,6 +17,7 @@ import 'package:zhijin_compass/storages/sp_utils.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/tools/ZzPermissionTool.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
+import 'package:zhijin_compass/screens/roots/update_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,6 +34,7 @@ class _HomePageState extends State<HomePage>
   late StreamSubscription<TabbarOnChangeBus> updateDataStream;
   late StreamSubscription<LoginBus> loginStream;
   List<NewStockModel> _collectStockList = [];
+  bool _isDoneBuild = false;
   @override
   void onLifecycleEvent(LifecycleEvent event) {
     if (event == LifecycleEvent.active) {
@@ -41,6 +45,20 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  _getIsDoneBuildUrl() {
+    HttpUtil.getInstance().get(
+      "/user/isLastVersion",
+      successCallback: (data) {
+        ZzLoading.dismiss();
+        setState(() {
+          _isDoneBuild = data ?? false;
+        });
+      },
+      errorCallback: (errorCode, errorMsg) {
+        ZzLoading.showMessage(errorMsg);
+      },
+    );
+  }
   // Future<void> _onRefresh() async {
   //   await Future.delayed(const Duration(milliseconds: 200), () {
   //     _getCollectStockListUrl();
@@ -125,6 +143,7 @@ class _HomePageState extends State<HomePage>
   }
 
   _getCollectStockListUrl() {
+    _getIsDoneBuildUrl();
     if ($empty(BaseSpStorage.getInstance().userToken)) {
       setState(() {
         final localStocks = BaseSpStorage.getInstance().localStockModels;
@@ -255,6 +274,7 @@ class _HomePageState extends State<HomePage>
                       //---------------指数行情------------------
                       StockIndexWidget(
                         symbols: ["sh000001", "sz399001", "sz399006"],
+                        isDoneBuild: _isDoneBuild,
                         onNewsTap: () => safePushToPage(context, 'news_page'),
                       ),
                       //--------------上面是指数
@@ -279,6 +299,7 @@ class _HomePageState extends State<HomePage>
                                 ),
                                 child: CollectStockWidget(
                                   collectStockList: _collectStockList,
+                                  isDoneBuild: _isDoneBuild,
                                   onLongPress: (stock) {
                                     ZzCustomDialog.show(
                                       context: context,

@@ -270,7 +270,7 @@ class _StockDetailPageState extends State<StockDetailPage>
                 ],
               ),
             )
-          : WebViewWidget(controller: controller),
+          : SafeArea(child: WebViewWidget(controller: controller)),
     );
   }
 

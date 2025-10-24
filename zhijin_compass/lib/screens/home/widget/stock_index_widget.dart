@@ -7,8 +7,14 @@ import 'package:zhijin_compass/ztool/ztool.dart';
 class StockIndexWidget extends StatefulWidget {
   final List<String> symbols;
   final VoidCallback? onNewsTap;
+  final bool isDoneBuild;
 
-  const StockIndexWidget({super.key, required this.symbols, this.onNewsTap});
+  const StockIndexWidget({
+    super.key,
+    required this.symbols,
+    this.onNewsTap,
+    this.isDoneBuild = false,
+  });
 
   @override
   State<StockIndexWidget> createState() => _StockIndexWidgetState();
@@ -19,7 +25,6 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
   late Map<String, dynamic> shData;
   late Map<String, dynamic> szData;
   late Map<String, dynamic> cybData;
-  bool _isDoneBuild = false;
 
   @override
   void initState() {
@@ -28,7 +33,6 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
     szData = {"name": "深证成指", "price": "0.00", "diff": "0.00", "chg": "0.00"};
     cybData = {"name": "创业板指", "price": "0.00", "diff": "0.00", "chg": "0.00"};
     _initSocket();
-    _getIsDoneBuildUrl();
   }
 
   void _initSocket() async {
@@ -55,21 +59,6 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
       print('ws==>尝试错误: $e');
       Future.delayed(Duration(seconds: 5), _initSocket);
     }
-  }
-
-  _getIsDoneBuildUrl() {
-    HttpUtil.getInstance().get(
-      "/user/isLastVersion",
-      successCallback: (data) {
-        ZzLoading.dismiss();
-        setState(() {
-          _isDoneBuild = data ?? false;
-        });
-      },
-      errorCallback: (errorCode, errorMsg) {
-        ZzLoading.showMessage(errorMsg);
-      },
-    );
   }
 
   void _handleMessage(String message) {
@@ -125,8 +114,8 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      margin: const EdgeInsets.only(left: 10, right: 10),
+      padding: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.only(left: 8, right: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12)),
         image: DecorationImage(
@@ -145,12 +134,12 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
               ],
             ),
           ),
-          if (widget.onNewsTap != null && _isDoneBuild)
+          if (widget.onNewsTap != null && widget.isDoneBuild)
             InkWell(
               onTap: widget.onNewsTap,
               child: Padding(
                 padding: EdgeInsets.only(
-                  right: 20,
+                  right: 15,
                   left: 8,
                   top: 10,
                   bottom: 10,
@@ -181,7 +170,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
           Text(
             item['price'] ?? "0.00",
             style: ZzFonts.fontByBase(
-              16,
+              15,
               ZZStockFormat.getColorByDiff(item["diff"]),
               FontWeight.w500,
             ),
@@ -199,7 +188,7 @@ class _StockIndexWidgetState extends State<StockIndexWidget> {
                   FontWeight.normal,
                 ),
               ),
-              SizedBox(width: 5),
+              SizedBox(width: 4),
               Text(
                 (double.parse(item["chg"]) > 0 ? '+' : '') + item["chg"] + '%',
                 style: ZzFonts.fontByBase(

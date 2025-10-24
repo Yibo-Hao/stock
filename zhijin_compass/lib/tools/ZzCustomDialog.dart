@@ -181,17 +181,20 @@ class ZzCustomDialog extends StatelessWidget {
     showDialog(
       barrierDismissible: barrierDismissible,
       context: context,
-      builder: (context) => ZzCustomDialog(
-        title: title,
-        content: content,
-        customContent: customContent,
-        image: image,
-        leftButtonText: leftButtonText,
-        rightButtonText: rightButtonText,
-        leftButtonAction: leftButtonAction,
-        rightButtonAction: rightButtonAction,
-        closeButtonAction: closeButtonAction,
-        singleButton: singleButton,
+      builder: (context) => PopScope(
+        canPop: barrierDismissible,
+        child: ZzCustomDialog(
+          title: title,
+          content: content,
+          customContent: customContent,
+          image: image,
+          leftButtonText: leftButtonText,
+          rightButtonText: rightButtonText,
+          leftButtonAction: leftButtonAction,
+          rightButtonAction: rightButtonAction,
+          closeButtonAction: closeButtonAction,
+          singleButton: singleButton,
+        ),
       ),
     );
   }

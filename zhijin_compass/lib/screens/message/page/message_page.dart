@@ -7,6 +7,7 @@ import 'package:lifecycle/lifecycle.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
+import 'package:zhijin_compass/storages/sp_utils.dart';
 import 'package:zhijin_compass/tools/ZzPermissionTool.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 import 'package:zhijin_compass/ztool/ztool_appbar.dart';
@@ -52,6 +53,9 @@ class _MessagePageState extends State<MessagePage>
   }
 
   _getMessageGroup() {
+    if ($empty(BaseSpStorage.getInstance().userToken)) {
+      return;
+    }
     _dataArr = [];
     HttpUtil.getInstance().get(
       "/message/getMessageType",

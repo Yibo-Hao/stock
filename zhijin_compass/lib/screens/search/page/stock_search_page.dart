@@ -240,8 +240,11 @@ class _StockSearchPageState extends State<StockSearchPage>
                       color: Color(0xffF2F2F2),
                       borderRadius: BorderRadius.all(Radius.circular(100)),
                     ),
+                    height: 40,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.only(bottom: 12, left: 10, right: 10),
+                      height: 40,
+
                       child: Row(
                         children: <Widget>[
                           Padding(padding: const EdgeInsets.only(left: 4)),
@@ -259,6 +262,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                               style: TextStyle(
                                 color: ZzColor.color_333333,
                                 fontSize: 15,
+                                fontWeight: FontWeight.w400,
                                 textBaseline: TextBaseline.alphabetic,
                               ),
                               inputFormatters: <TextInputFormatter>[
@@ -275,6 +279,7 @@ class _StockSearchPageState extends State<StockSearchPage>
                                 hintStyle: TextStyle(
                                   color: Color(0xffA8A8A8),
                                   fontSize: 13,
+                                  fontWeight: FontWeight.normal,
                                   textBaseline: TextBaseline.alphabetic,
                                   height: 1.35,
                                 ),
@@ -307,233 +312,245 @@ class _StockSearchPageState extends State<StockSearchPage>
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Visibility(
-            visible:
-                _editingController.text.isNotEmpty && _searchResult.isEmpty,
-            child: Container(
-              padding: EdgeInsets.only(top: 80),
-              child: Column(
-                children: [
-                  Image.asset('assets/images/search_none.png', height: 120),
-                  SizedBox(height: 20),
-                  Text("暂无数据", style: ZzFonts.fontNormal666(13)),
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible:
-                _searchResult.isEmpty &&
-                $notempty(_hotSearchList) &&
-                _editingController.text.isEmpty,
-            child: Container(
-              //渐变色 一点点阴影
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xffFFF0F1), ZzColor.whiteColor],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Visibility(
+              visible:
+                  _editingController.text.isNotEmpty && _searchResult.isEmpty,
+              child: Container(
+                padding: EdgeInsets.only(top: 80),
+                child: Column(
+                  children: [
+                    Image.asset('assets/images/search_none.png', height: 120),
+                    SizedBox(height: 20),
+                    Text("暂无数据", style: ZzFonts.fontNormal666(13)),
+                  ],
                 ),
-                //阴影
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.1),
-                    offset: Offset(0, -2),
-                    blurRadius: 10,
-                  ),
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Image.asset("assets/icons/fire.png", height: 18),
-                      SizedBox(width: 5),
-                      Text("热门搜索", style: ZzFonts.fontMedium333(16)),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  //写一个热门搜索的标签
-                  SizedBox(
-                    width: double.infinity,
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      alignment: WrapAlignment.start,
-
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      runAlignment: WrapAlignment.start,
-                      children: _hotSearchList.map((item) {
-                        return InkWell(
-                          onTap: () {
-                            if (_isDoneBuild) {
-                              constPushToPage(
-                                context,
-                                StockDetailPage(
-                                  model: NewStockModel.fromJson(item.toJson()),
-                                ),
-                              );
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color(0xfff8f8f8),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(100),
-                              ),
-                            ),
-                            child: Text(
-                              "${ZZStockFormat().getSplitStockModel(item.symbol ?? '').prefix ?? ''} ${item.name}",
-                              style: ZzFonts.fontNormal333(13),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              controller: _scrollController,
-              itemCount: _searchResult.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    if (_isDoneBuild) {
-                      constPushToPage(
-                        context,
-                        StockDetailPage(model: _searchResult[index]),
-                      );
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
+            Visibility(
+              visible:
+                  _searchResult.isEmpty &&
+                  $notempty(_hotSearchList) &&
+                  _editingController.text.isEmpty,
+              child: Container(
+                //渐变色 一点点阴影
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xffFFF0F1), ZzColor.whiteColor],
+                  ),
+                  //阴影
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.1),
+                      offset: Offset(0, -2),
+                      blurRadius: 10,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  _searchResult[index].name ?? '',
-                                  style: ZzFonts.fontMedium333(14),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  "${ZZStockFormat().getSplitStockModel(_searchResult[index].symbol ?? '').prefix ?? ''} ${ZZStockFormat().getSplitStockModel(_searchResult[index].symbol ?? '').code ?? ''}",
-                                  style: ZzFonts.fontNormal999(14),
-                                ),
-                              ],
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (_collectStockList.any(
-                                  (element) =>
-                                      element.symbol ==
-                                      _searchResult[index].symbol,
-                                )) {
-                                  _removeCollectStockUrl(_searchResult[index]);
-                                } else {
-                                  _addCollectStockUrl(_searchResult[index]);
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  left: 30,
-                                  right: 10,
-                                  top: 10,
-                                  bottom: 10,
-                                ),
-                                child: Image.asset(
-                                  _collectStockList.any(
-                                        (element) =>
-                                            element.symbol ==
-                                            _searchResult[index].symbol,
-                                      )
-                                      ? 'assets/icons/collect_yes.png'
-                                      : 'assets/icons/collect_no.png',
-                                  height: 20,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(color: ZzColor.lineColor, height: 1),
+                        Image.asset("assets/icons/fire.png", height: 18),
+                        SizedBox(width: 5),
+                        Text("热门搜索", style: ZzFonts.fontMedium333(16)),
                       ],
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
+                    SizedBox(height: 8),
+                    //写一个热门搜索的标签
+                    SizedBox(
+                      width: double.infinity,
+                      child: Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        alignment: WrapAlignment.start,
 
-          Visibility(
-            visible: !_isLogin,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
-              decoration: BoxDecoration(
-                //渐变色
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xffFFF3DD),
-                    Color.fromARGB(255, 254, 244, 226),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/home_plane.png', height: 25),
-                      SizedBox(width: 5),
-                      Text("登录后同步自选股，数据不丢失", style: ZzFonts.fontNormal333(14)),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      safePushToPage(context, 'login_page');
-                    },
-                    child: Container(
-                      decoration: ZzDecoration.onlyradius(
-                        100,
-                        ZzColor.mainAppColor,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 3,
-                      ),
-                      child: Center(
-                        child: Text('立即登录', style: ZzFonts.fontNormalWhite(12)),
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        children: _hotSearchList.map((item) {
+                          return InkWell(
+                            onTap: () {
+                              if (_isDoneBuild) {
+                                constPushToPage(
+                                  context,
+                                  StockDetailPage(
+                                    model: NewStockModel.fromJson(
+                                      item.toJson(),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color(0xfff8f8f8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
+                              ),
+                              child: Text(
+                                "${ZZStockFormat().getSplitStockModel(item.symbol ?? '').prefix ?? ''} ${item.name}",
+                                style: ZzFonts.fontNormal333(13),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                controller: _scrollController,
+                itemCount: _searchResult.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      if (_isDoneBuild) {
+                        constPushToPage(
+                          context,
+                          StockDetailPage(model: _searchResult[index]),
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    _searchResult[index].name ?? '',
+                                    style: ZzFonts.fontMedium333(14),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "${ZZStockFormat().getSplitStockModel(_searchResult[index].symbol ?? '').prefix ?? ''} ${ZZStockFormat().getSplitStockModel(_searchResult[index].symbol ?? '').code ?? ''}",
+                                    style: ZzFonts.fontNormal999(14),
+                                  ),
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (_collectStockList.any(
+                                    (element) =>
+                                        element.symbol ==
+                                        _searchResult[index].symbol,
+                                  )) {
+                                    _removeCollectStockUrl(
+                                      _searchResult[index],
+                                    );
+                                  } else {
+                                    _addCollectStockUrl(_searchResult[index]);
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    left: 30,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: 10,
+                                  ),
+                                  child: Image.asset(
+                                    _collectStockList.any(
+                                          (element) =>
+                                              element.symbol ==
+                                              _searchResult[index].symbol,
+                                        )
+                                        ? 'assets/icons/collect_yes.png'
+                                        : 'assets/icons/collect_no.png',
+                                    height: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(color: ZzColor.lineColor, height: 1),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            Visibility(
+              visible: !_isLogin,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+                decoration: BoxDecoration(
+                  //渐变色
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xffFFF3DD),
+                      Color.fromARGB(255, 254, 244, 226),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/home_plane.png', height: 25),
+                        SizedBox(width: 5),
+                        Text(
+                          "登录后同步自选股，数据不丢失",
+                          style: ZzFonts.fontNormal333(14),
+                        ),
+                      ],
+                    ),
+                    InkWell(
+                      onTap: () {
+                        safePushToPage(context, 'login_page');
+                      },
+                      child: Container(
+                        decoration: ZzDecoration.onlyradius(
+                          100,
+                          ZzColor.mainAppColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 3,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '立即登录',
+                            style: ZzFonts.fontNormalWhite(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

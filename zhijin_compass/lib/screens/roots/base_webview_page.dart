@@ -116,7 +116,7 @@ class _BaseWebViewPageState extends State<BaseWebViewPage>
                 ],
               ),
             )
-          : WebViewWidget(controller: controller),
+          : SafeArea(child: WebViewWidget(controller: controller)),
     );
   }
 

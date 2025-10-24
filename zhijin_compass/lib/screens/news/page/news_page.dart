@@ -118,144 +118,147 @@ class _NewsPageState extends State<NewsPage> {
           ],
         ),
       ),
-      body: Container(
-        //设置背景视图,上面有个80高的色块
-        decoration: const BoxDecoration(color: ZzColor.pageBackGround),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Color(0xffF1525B),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
+      body: SafeArea(
+        child: Container(
+          //设置背景视图,上面有个80高的色块
+          decoration: const BoxDecoration(color: ZzColor.pageBackGround),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Color(0xffF1525B),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Column(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10),
-                          // decoration: BoxDecoration(
-                          //   //渐变色
-                          //   borderRadius: BorderRadius.all(Radius.circular(20)),
-                          //   gradient: LinearGradient(
-                          //     begin: Alignment.topCenter,
-                          //     end: Alignment.bottomCenter,
-                          //     stops: [0, 0.2],
-                          //     colors: [
-                          //       Color.fromRGBO(248, 180, 187, 1),
-                          //       ZzColor.pageBackGround,
-                          //     ],
-                          //   ),
-                          // ),
-                          child: ZzRefresh(
-                            refreshController: _refreshController,
-                            onRefresh: () => _onRefresh(),
-                            onLoading: () => _onLoad(),
-                            child: CustomScrollView(
-                              slivers: <Widget>[
-                                ..._dataArr.map(
-                                  (item) => SliverToBoxAdapter(
-                                    child: InkWell(
-                                      onTap: () => safePushToPage(
-                                        context,
-                                        'base_webview_page',
-                                        arguments: {
-                                          "url": item.url ?? item.dlUrl,
-                                          "title": item.title,
-                                        },
-                                      ),
-                                      child: Container(
-                                        decoration: ZzDecoration.onlyradius(
-                                          10,
-                                          ZzColor.whiteColor,
+              Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            // decoration: BoxDecoration(
+                            //   //渐变色
+                            //   borderRadius: BorderRadius.all(Radius.circular(20)),
+                            //   gradient: LinearGradient(
+                            //     begin: Alignment.topCenter,
+                            //     end: Alignment.bottomCenter,
+                            //     stops: [0, 0.2],
+                            //     colors: [
+                            //       Color.fromRGBO(248, 180, 187, 1),
+                            //       ZzColor.pageBackGround,
+                            //     ],
+                            //   ),
+                            // ),
+                            child: ZzRefresh(
+                              refreshController: _refreshController,
+                              onRefresh: () => _onRefresh(),
+                              onLoading: () => _onLoad(),
+                              child: CustomScrollView(
+                                slivers: <Widget>[
+                                  ..._dataArr.map(
+                                    (item) => SliverToBoxAdapter(
+                                      child: InkWell(
+                                        onTap: () => safePushToPage(
+                                          context,
+                                          'base_webview_page',
+                                          arguments: {
+                                            "url": item.url ?? item.dlUrl,
+                                            "title": item.title,
+                                          },
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                          vertical: 8,
-                                        ),
-                                        margin: EdgeInsets.only(bottom: 8),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                height: 80,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      item.title ?? '',
-                                                      style:
-                                                          ZzFonts.fontMedium333(
-                                                            15,
-                                                          ),
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      "${item.media}  ${item.ctime}",
-                                                      style:
-                                                          ZzFonts.fontNormal666(
-                                                            13,
-                                                          ),
-                                                    ),
-                                                  ],
+                                        child: Container(
+                                          decoration: ZzDecoration.onlyradius(
+                                            10,
+                                            ZzColor.whiteColor,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 8,
+                                          ),
+                                          margin: EdgeInsets.only(bottom: 8),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 75,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        item.title ?? '',
+                                                        style:
+                                                            ZzFonts.fontMedium333(
+                                                              15,
+                                                            ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      Text(
+                                                        "${item.media}  ${item.ctime}",
+                                                        style:
+                                                            ZzFonts.fontNormal666(
+                                                              13,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Container(
-                                              decoration:
-                                                  ZzDecoration.onlyradius(
-                                                    50,
-                                                    ZzColor.whiteColor,
-                                                  ),
-                                              width: 120,
-                                              height: 75,
+                                              SizedBox(width: 10),
+                                              Container(
+                                                decoration:
+                                                    ZzDecoration.onlyradius(
+                                                      50,
+                                                      ZzColor.whiteColor,
+                                                    ),
+                                                width: 120,
+                                                height: 75,
 
-                                              child: zZNetImage(
-                                                $notempty(item.thumb)
-                                                    ? item.thumb![0]
-                                                    : "assets/images/example_news.png",
-                                                fit: BoxFit.cover,
-                                                borderRadius: 2,
+                                                child: zZNetImage(
+                                                  $notempty(item.thumb)
+                                                      ? item.thumb![0]
+                                                      : "assets/images/example_news.png",
+                                                  fit: BoxFit.cover,
+                                                  borderRadius: 2,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

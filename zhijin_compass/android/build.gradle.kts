@@ -4,7 +4,7 @@ allprojects {
         mavenCentral()
         maven(url = "https://maven.aliyun.com/repository/gradle-plugin")
         maven(url = "https://maven.aliyun.com/nexus/content/groups/public/")
-        // maven(url = "https://maven.aliyun.com/nexus/content/repositories/jcenter")
+        maven(url = "https://maven.aliyun.com/nexus/content/repositories/jcenter")
     }
 }
 
