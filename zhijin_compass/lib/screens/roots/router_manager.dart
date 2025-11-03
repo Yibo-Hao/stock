@@ -15,6 +15,7 @@ import 'package:zhijin_compass/screens/roots/base_webview_page.dart';
 import 'package:zhijin_compass/screens/news/page/news_page.dart';
 import 'package:zhijin_compass/screens/roots/root_index.dart';
 import 'package:zhijin_compass/screens/search/page/stock_search_page.dart';
+import 'package:zhijin_compass/screens/welcome/page/welcome_page.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
 
 Map<String, WidgetBuilder> allRoutes = {};
@@ -40,20 +41,20 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       },
     );
   }
-  // if (settings.name == "welcome_page") {
-  //   return PageRouteBuilder(
-  //     pageBuilder: (_, __, ___) => const WelcomePage(),
-  //     transitionsBuilder: (_, animation, __, child) {
-  //       return FadeTransition(
-  //         opacity: animation,
-  //         child: ScaleTransition(
-  //           scale: Tween<double>(begin: 1.5, end: 1.0).animate(animation),
-  //           child: child,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  if (settings.name == "welcome_page") {
+    return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => const WelcomePage(),
+      transitionsBuilder: (_, animation, __, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 1.5, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
   var routes = <String, WidgetBuilder>{
     "index_page": (_) => IndexPage(),
     "home_page": (_) => const HomePage(), //首页

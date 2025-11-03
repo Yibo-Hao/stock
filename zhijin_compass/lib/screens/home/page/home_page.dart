@@ -1,12 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:lifecycle/lifecycle.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:zhijin_compass/http_utils/http_utill.dart';
 import 'package:zhijin_compass/screens/home/widget/collect_stock_widget.dart';
 import 'package:zhijin_compass/screens/roots/root_event_bus.dart';
@@ -17,7 +13,6 @@ import 'package:zhijin_compass/storages/sp_utils.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
 import 'package:zhijin_compass/tools/ZzPermissionTool.dart';
 import 'package:zhijin_compass/ztool/ztool.dart';
-import 'package:zhijin_compass/screens/roots/update_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

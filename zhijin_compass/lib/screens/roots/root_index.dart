@@ -47,7 +47,7 @@ class _IndexPageState extends State<IndexPage> {
   @override
   void initState() {
     super.initState();
-    // print("HHHHHH--进入初始化index页面,初始化推送方法");
+    print("HHHHHH--进入初始化index页面,初始化推送方法");
     // initJPushMethod();
 
     UmengCommonSdk.initCommon(

@@ -102,7 +102,9 @@ class MyApp extends StatelessWidget {
         ),
 
         //home: const WelcomePage(),
-        initialRoute: "index_page",
+        initialRoute: BaseSpStorage.getInstance().isAgreeProl == 'true'
+            ? "index_page"
+            : "welcome_page",
 
         onGenerateRoute: onGenerateRoute,
         localizationsDelegates: const [

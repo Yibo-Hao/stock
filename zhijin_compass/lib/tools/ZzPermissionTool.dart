@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:aliyun_push/aliyun_push.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/services.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zhijin_compass/screens/roots/router_manager.dart';
 import 'package:zhijin_compass/screens/roots/update_dialog.dart';
 import 'package:zhijin_compass/tools/ZzCustomDialog.dart';
-import 'package:zhijin_compass/ztool/ztool_loading.dart';
 
 enum PermissionType { sms, calendar, camera, notification, storage }
 

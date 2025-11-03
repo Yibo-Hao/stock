@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zhijin_compass/screens/roots/root_event_bus.dart';
@@ -41,7 +37,7 @@ class HttpUtil {
    * config it and create
    */
   HttpUtil() {
-    String? proxy = BaseSpStorage.getInstance().proxy;
+    // String? proxy = BaseSpStorage.getInstance().proxy;
     //BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     options = BaseOptions(
       baseUrl: BaseUrl.url,
